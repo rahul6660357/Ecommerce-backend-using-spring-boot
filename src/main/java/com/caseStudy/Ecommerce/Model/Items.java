@@ -17,6 +17,18 @@ public class Items implements Serializable {
     @Column(nullable = false,columnDefinition = "int default '1'")
     private int active;
 
+    public double getPrice() {
+        return price;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
     public Items() {
     }
 

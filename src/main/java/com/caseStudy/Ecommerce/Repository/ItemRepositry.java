@@ -4,6 +4,12 @@ import com.caseStudy.Ecommerce.Model.Items;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ItemRepositry extends JpaRepository<Items, Long>{
+
+
+    List<Items> findAllByName(String name);
+    List<Items> findAllByCatogory(String catogory);
 }

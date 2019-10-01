@@ -3,6 +3,7 @@ package com.caseStudy.Ecommerce.Controller;
 
 import com.caseStudy.Ecommerce.Model.Items;
 import com.caseStudy.Ecommerce.Repository.ItemRepositry;
+import com.caseStudy.Ecommerce.ResourcenotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,46 @@ ItemRepositry itemRepository;
     public List<Items> getAllNotes() {
         return itemRepository.findAll();
     }
-    @PostMapping("/productdetails")
+    @PostMapping("/addproduct")
     public Items createNote(@Valid @RequestBody Items item) {
         return itemRepository.save(item);
+    }
+
+    @GetMapping("/productdetails/{id}")
+    public Items getNoteById(@PathVariable(value = "id") Long noteId) {
+        return itemRepository.findById(noteId)
+                .orElseThrow(() -> new ResourcenotFoundException("Note", "id", noteId));
+    }
+
+    @GetMapping("/productname/{name}")
+    public List<Items> getbyname(@PathVariable(value = "name") String name){
+        return  itemRepository.findAllByName(name);
+    }
+
+    @GetMapping("/productcatogory/{catogory}")
+    public List<Items> getbycatogory(@PathVariable(value = "catogory") String category){
+        return  itemRepository.findAllByCatogory(category);
+    }
+
+
+    @PutMapping("/updateitem/{id}")
+    public Items updateNote(@PathVariable(value = "id") Long noteId,
+                           @Valid @RequestBody Items noteDetails) {
+
+        Items note = itemRepository.findById(noteId)
+                .orElseThrow(() -> new ResourcenotFoundException("Note", "id", noteId));
+
+        note.setCatogory(noteDetails.getCatogory());
+        note.setSubcatogory(noteDetails.getSubcatogory());
+        note.setActive(noteDetails.getActive());
+        note.setPrice(noteDetails.getPrice());
+        note.setDetails(noteDetails.getDetails());
+        note.setImage(noteDetails.getImage());
+        note.setName(noteDetails.getName());
+        note.setItemdetails(noteDetails.getItemdetails());
+
+        Items updatedNote = itemRepository.save(note);
+        return updatedNote;
     }
 
 }
