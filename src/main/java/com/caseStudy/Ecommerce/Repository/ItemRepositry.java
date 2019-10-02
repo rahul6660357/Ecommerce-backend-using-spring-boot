@@ -12,4 +12,6 @@ public interface ItemRepositry extends JpaRepository<Items, Long>{
 
     List<Items> findAllByName(String name);
     List<Items> findAllByCatogory(String catogory);
+    List<Items> findAllByPriceBefore(Double price);
+    List<Items> findAllByPriceBetween(Double price1, Double price2);
 }

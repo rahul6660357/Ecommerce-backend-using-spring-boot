@@ -42,6 +42,15 @@ ItemRepositry itemRepository;
         return  itemRepository.findAllByCatogory(category);
     }
 
+    @GetMapping("/productprice/{price}")
+    public List<Items> getbyprice(@PathVariable(value = "price")Double price){
+        return itemRepository.findAllByPriceBefore(price);
+    }
+    @GetMapping("/productpricebtw/{price1}/{price2}")
+    public List<Items> getbypricebtw(@PathVariable(value = "price1")Double price1,@PathVariable(value = "price2")Double price2){
+        return itemRepository.findAllByPriceBetween(price1,price2);
+    }
+
 
     @PutMapping("/updateitem/{id}")
     public Items updateNote(@PathVariable(value = "id") Long noteId,
