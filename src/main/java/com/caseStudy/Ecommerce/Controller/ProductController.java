@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
+@CrossOrigin("http://localhost:4200")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -50,7 +50,10 @@ ItemRepositry itemRepository;
     public List<Items> getbypricebtw(@PathVariable(value = "price1")Double price1,@PathVariable(value = "price2")Double price2){
         return itemRepository.findAllByPriceBetween(price1,price2);
     }
-
+    @GetMapping("productpricebtwcat/{price1}/{price2}/{catogory}")
+    public List<Items> getbypricebtwcat(@PathVariable(value = "price1")Double price1,@PathVariable(value = "price2")Double price2,@PathVariable(value = "catogory")String category){
+      return itemRepository.findAllByPriceBetweenAndCatogory(price1,price2,category);
+    }
 
     @PutMapping("/updateitem/{id}")
     public Items updateNote(@PathVariable(value = "id") Long noteId,

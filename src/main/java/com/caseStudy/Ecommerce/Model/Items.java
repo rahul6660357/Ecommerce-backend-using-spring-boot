@@ -7,9 +7,18 @@ import java.io.Serializable;
 public class Items implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long productId;
+    private long product_id;
     private String name;
     private double price;
+
+    public long getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(long product_id) {
+        this.product_id = product_id;
+    }
+
     private String details;
     private String image;
     private String catogory;
@@ -46,13 +55,7 @@ public class Items implements Serializable {
     @Embedded
     private Itemdetails itemdetails;
 
-    public long getProductId() {
-        return productId;
-    }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
-    }
 
     public String getName() {
         return name;
