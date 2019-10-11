@@ -69,7 +69,7 @@ ItemRepositry itemRepository;
         note.setDetails(noteDetails.getDetails());
         note.setImage(noteDetails.getImage());
         note.setName(noteDetails.getName());
-        note.setItemdetails(noteDetails.getItemdetails());
+
 
         Items updatedNote = itemRepository.save(note);
         return updatedNote;

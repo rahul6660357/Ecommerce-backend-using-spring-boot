@@ -1,9 +1,13 @@
 package com.caseStudy.Ecommerce.Model;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "items")
+@EntityListeners(AuditingEntityListener.class)
 public class Items implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +45,7 @@ public class Items implements Serializable {
     public Items() {
     }
 
-    public Items(String name, double price, String details, String image, String catogory, String subcatogory, int active, Itemdetails itemdetails) {
+    public Items(String name, double price, String details, String image, String catogory, String subcatogory, int active) {
         this.name = name;
         this.price = price;
         this.details = details;
@@ -49,11 +53,9 @@ public class Items implements Serializable {
         this.catogory = catogory;
         this.subcatogory = subcatogory;
         this.active = active;
-        this.itemdetails = itemdetails;
+
     }
 
-    @Embedded
-    private Itemdetails itemdetails;
 
 
 
@@ -113,13 +115,6 @@ public class Items implements Serializable {
         this.active = active;
     }
 
-    public Itemdetails getItemdetails() {
-        return itemdetails;
-    }
-
-    public void setItemdetails(Itemdetails itemdetails) {
-        this.itemdetails = itemdetails;
-    }
 
 
 }
