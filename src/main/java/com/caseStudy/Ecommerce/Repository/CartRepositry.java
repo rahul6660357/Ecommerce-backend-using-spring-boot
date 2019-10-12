@@ -16,4 +16,5 @@ public interface CartRepositry  extends JpaRepository<Cart, Long> {
    List<Cart> findByUsersAndItems_Active(Optional<Users> user, int i);
 
 
+    List<Cart> findAllByUsers(Users users);
 }

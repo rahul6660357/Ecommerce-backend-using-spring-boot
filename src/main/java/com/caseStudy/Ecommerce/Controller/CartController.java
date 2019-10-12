@@ -31,7 +31,7 @@ public class CartController {
 //    return cartService.removeproduct(currentUserservice.getuserid(principal),product_id);
 //}
 
-    @RequestMapping(value = "/addproduct/receive/{product_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/addproduct/receive/{product_id}", method = RequestMethod.GET)
     @ResponseBody
     public String addtocart(@PathVariable Long product_id, Principal principal){
         return cartService.addtocart( currentUserservice.getUserid(principal),product_id);
@@ -49,9 +49,6 @@ public class CartController {
         return cartService.showcart( currentUserservice.getUserid(principal));
 
     }
-
-
-
     @RequestMapping( value = "/checkout/recieve" , method = RequestMethod.GET)
     @ResponseBody
     public double checkout(Principal principal)
@@ -64,5 +61,18 @@ public class CartController {
     public String clearcart(Principal principal)
     {
         return cartService.clearcart(currentUserservice.getUserid(principal),principal);
+    }
+
+    @RequestMapping(value = "/addquantity/{product_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String AddQuantity(@PathVariable Long product_id, Principal principal)
+    {
+        return cartService.Addquantity(currentUserservice.getUserid(principal),product_id);
+    }
+    @RequestMapping(value = "/subquantity/{product_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String SubQuantity(@PathVariable Long product_id, Principal principal)
+    {
+        return cartService.Subquantity(currentUserservice.getUserid(principal),product_id);
     }
 }

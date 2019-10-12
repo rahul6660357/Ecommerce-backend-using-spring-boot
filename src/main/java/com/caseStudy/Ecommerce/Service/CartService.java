@@ -2,6 +2,7 @@ package com.caseStudy.Ecommerce.Service;
 
 import com.caseStudy.Ecommerce.Model.Cart;
 import com.caseStudy.Ecommerce.Model.Items;
+import com.caseStudy.Ecommerce.Model.OrderHistory;
 import com.caseStudy.Ecommerce.Model.Users;
 import com.caseStudy.Ecommerce.Repository.CartRepositry;
 import com.caseStudy.Ecommerce.Repository.ItemRepositry;
@@ -26,39 +27,38 @@ public class CartService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    OrderHistoryRepositry orderHistoryRepositry;
+
     public String addtocart(Long userid, Long product_id) {
         Optional<Items> item = itemRepositry.findById(product_id);
         Optional<Users> user = userRepository.findById((userid));
         if (cartRepositry.findByUsersAndItems(user, item).isPresent()) {
-           Cart cart= cartRepositry.findByUsersAndItems(user,item).get();
-           cart.setQuantity(cart.getQuantity()+1);
-           cartRepositry.save(cart);
-            return "This item is already present in your cart";
+            Cart cart = cartRepositry.findByUsersAndItems(user, item).get();
+            cart.setQuantity(cart.getQuantity() + 1);
+            cartRepositry.save(cart);
+
         } else {
             Cart cart = new Cart();
             cart.setItems(item.get());
             cart.setUsers(user.get());
             cart.setQuantity(1);
             cartRepositry.save(cart);
-            return "Successfully added";
+
         }
+        return "\"Successfully added\"";
     }
 
 
     public String removefromcart(Long getuserid, Long product_id) {
         Optional<Items> item = itemRepositry.findById(product_id);
         Optional<Users> user = userRepository.findById((getuserid));
-        if (cartRepositry.findByUsersAndItems(user, item).get().getQuantity() <= 1) {
-            Cart car = cartRepositry.findByUsersAndItems(user,item).get();
+        if (cartRepositry.findByUsersAndItems(user, item).get().getQuantity() != 0) {
+            Cart car = cartRepositry.findByUsersAndItems(user, item).get();
             cartRepositry.delete(car);
 
         }
-        else {
-          Cart cart=  cartRepositry.findByUsersAndItems(user,item).get();
-          cart.setQuantity(cart.getQuantity()-1);
-          cartRepositry.save(cart);
-        }
-        return "successfully removed";
+        return "\"successfully removed\"";
     }
 
 //    public Cart addProduct(Long userid, Long product_id) {
@@ -77,23 +77,64 @@ public class CartService {
 //    }
 
 
-
     public double checkout(Long getuserid, Principal principal) {
+        Optional<Users> users = userRepository.findById(getuserid);
+        List<Cart> cartList = cartRepositry.findAllByUsers(users.get());
+        for (Cart car : cartList) {
+            OrderHistory order = new OrderHistory();
+            order.setItems(car.getItems());
+            double p = car.getItems().getPrice();
+            order.setQuantity(car.getQuantity());
+            order.setPrice((int) (car.getQuantity() * p));
+            order.setUsers(car.getUsers());
+            order.setDate();
+            orderHistoryRepositry.save(order);
+        }
+        clearcart(getuserid, principal);
+
         return 0;
     }
-//
+
     public String clearcart(Long getuserid, Principal principal) {
-        Optional<Users> users=userRepository.findById(getuserid);
-        List<Cart> cartList =cartRepositry.findByUsersAndItems_Active(users,1);
-        for (Cart cart : cartList){
+        Optional<Users> users = userRepository.findById(getuserid);
+        List<Cart> cartList = cartRepositry.findByUsersAndItems_Active(users, 1);
+        for (Cart cart : cartList) {
             cartRepositry.deleteById(cart.getId());
         }
-        return "cart Cleared";
+        return "\"cart Cleared\"";
     }
 
     public List<Cart> showcart(Long userid) {
-        Optional<Users> users=userRepository.findById(userid);
-        return cartRepositry.findByUsersAndItems_Active(users,1);
+        Optional<Users> users = userRepository.findById(userid);
+        return cartRepositry.findByUsersAndItems_Active(users, 1);
 
+    }
+
+    public String Addquantity(Long userid, Long product_id) {
+        Optional<Items> item = itemRepositry.findById(product_id);
+        Optional<Users> user = userRepository.findById((userid));
+
+        if (cartRepositry.findByUsersAndItems(user, item).isPresent()) {
+            Cart cart = cartRepositry.findByUsersAndItems(user, item).get();
+            cart.setQuantity(cart.getQuantity() + 1);
+            cartRepositry.save(cart);
+        }
+        return "\"successfully Added\"";
+    }
+
+    public String Subquantity(Long userid, Long product_id) {
+        Optional<Items> item = itemRepositry.findById(product_id);
+        Optional<Users> user = userRepository.findById((userid));
+        if (cartRepositry.findByUsersAndItems(user, item).get().getQuantity() <= 1) {
+            Cart car = cartRepositry.findByUsersAndItems(user, item).get();
+            cartRepositry.delete(car);
+
+        }
+        else if (cartRepositry.findByUsersAndItems(user, item).isPresent()) {
+            Cart cart = cartRepositry.findByUsersAndItems(user, item).get();
+            cart.setQuantity(cart.getQuantity() - 1);
+            cartRepositry.save(cart);
+        }
+        return "\"successfully Decreased\"";
     }
 }
