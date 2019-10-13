@@ -56,6 +56,15 @@ public class CartController {
         return cartService.checkout(currentUserservice.getUserid(principal),principal);
     }
 
+    @RequestMapping( value = "/gettotal/recieve" , method = RequestMethod.GET)
+    @ResponseBody
+    public double getTotal(Principal principal)
+    {
+        return cartService.GetTotal(currentUserservice.getUserid(principal),principal);
+    }
+
+
+
     @RequestMapping( value = "/clearcart/recieve" , method = RequestMethod.GET)
     @ResponseBody
     public String clearcart(Principal principal)

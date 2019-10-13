@@ -85,6 +85,7 @@ public class CartService {
             order.setItems(car.getItems());
             double p = car.getItems().getPrice();
             order.setQuantity(car.getQuantity());
+
             order.setPrice((int) (car.getQuantity() * p));
             order.setUsers(car.getUsers());
             order.setDate();
@@ -136,5 +137,28 @@ public class CartService {
             cartRepositry.save(cart);
         }
         return "\"successfully Decreased\"";
+    }
+
+    public double GetTotal(Long userid, Principal principal) {
+        Optional<Users> users = userRepository.findById(userid);
+        double total=0;
+        List<Cart> cartList = cartRepositry.findAllByUsers(users.get());
+        for (Cart car : cartList) {
+
+            double p = car.getItems().getPrice();
+
+            total += car.getQuantity()*p;
+                   }
+        return total;
+    }
+    public List<OrderHistory> getHistory(Long userid, Principal principal) {
+        Optional<Users> users = userRepository.findById(userid);
+        return orderHistoryRepositry.findByUsersAndItems_Active(users, 1);
+    }
+
+
+    public Optional<Users> getUserDetail(Long userid) {
+        Optional<Users> users = userRepository.findById(userid);
+        return userRepository.findById(userid);
     }
 }
