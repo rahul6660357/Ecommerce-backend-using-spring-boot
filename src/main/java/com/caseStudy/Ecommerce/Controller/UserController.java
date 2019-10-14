@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
 
-@CrossOrigin("*")
+@CrossOrigin(value = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RestController
 @RequestMapping("/Users")
 public class UserController {
