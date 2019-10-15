@@ -36,7 +36,7 @@ public class UserController {
     @PostMapping("/adduser")
     public Users createuser(@Valid @RequestBody Users user) {
         user.setActive(1);
-        user.setRole("user");
+        user.setRole("admin");
         return userRepository.save(user);
     }
 
@@ -46,7 +46,12 @@ public class UserController {
 
         return cartService.getUserDetail(currentUserservice.getUserid(principal));
     }
+    @GetMapping("/getuserrole")
 
+    public String getUserRole(Principal principal){
+
+        return cartService.getUserRole(currentUserservice.getUserid(principal));
+    }
 
     @PutMapping("/updateuser/{userid}")
     public Users updateUser(@PathVariable(value = "userid") Long noteId,
@@ -60,8 +65,6 @@ public class UserController {
         note.setPassword(userDetails.getPassword());
         note.setLastname(userDetails.getLastname());
         note.setPhnno(userDetails.getPhnno());
-
-
 
         Users updatedNote = userRepository.save(note);
         return updatedNote;

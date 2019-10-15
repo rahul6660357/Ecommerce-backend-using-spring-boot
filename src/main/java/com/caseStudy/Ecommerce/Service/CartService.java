@@ -161,4 +161,15 @@ public class CartService {
         Optional<Users> users = userRepository.findById(userid);
         return userRepository.findById(userid);
     }
+
+    public String getUserRole(Long userid) {
+        Optional<Users> users = userRepository.findById(userid);
+        String str= userRepository.findById(userid).get().getRole();
+        if(str.equals("user")){
+            return "\"user\"";
+        }
+        else {
+            return "\"admin\"";
+        }
+    }
 }
