@@ -21,6 +21,12 @@ ItemRepositry itemRepository;
     public List<Items> getAllNotes() {
         return itemRepository.findAll();
     }
+
+    @DeleteMapping("/deleteproduct/{id}")
+    public String delete(@PathVariable(value = "id") Long noteId){
+         itemRepository.deleteById(noteId);
+         return "\"deleted Successfully\"";
+    }
     @PostMapping("/addproduct")
     public Items createNote(@Valid @RequestBody Items item) {
         return itemRepository.save(item);
@@ -34,7 +40,7 @@ ItemRepositry itemRepository;
 
     @GetMapping("/productname/{name}")
     public List<Items> getbyname(@PathVariable(value = "name") String name){
-        return  itemRepository.findAllByName(name);
+        return  itemRepository.findAllByNameContaining(name);
     }
 
     @GetMapping("/productcatogory/{catogory}")
@@ -73,6 +79,19 @@ ItemRepositry itemRepository;
 
         Items updatedNote = itemRepository.save(note);
         return updatedNote;
+    }
+
+    @PutMapping("/hide/{id}")
+    public String hideitem(@PathVariable(value = "id") Long noteId,
+                           @Valid @RequestBody Items noteDetails) {
+
+        Items note = itemRepository.findById(noteId)
+                .orElseThrow(() -> new ResourcenotFoundException("Note", "id", noteId));
+
+
+        note.setActive(noteDetails.getActive());
+        Items updatedNote = itemRepository.save(note);
+        return "\"updated\"";
     }
 
 }
